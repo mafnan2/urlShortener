@@ -9,6 +9,7 @@ let urlDatabase = {}
 let idCounter = 1
 
 app.use(cors());
+app.use(express.urlencoded({ extended: false }));
 
 app.use('/public', express.static(`${process.cwd()}/public`));
 
