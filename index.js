@@ -35,7 +35,7 @@ app.post('/api/shorturl', function (req, res) {
   const url = req.body.url
 
   if (!isValidURL(url)) {
-    return res.status(400).json({ error: 'invalid url' })
+    return res.json({ error: 'invalid url' });
   }
   let shorturl = idCounter++
   urlDatabase[shorturl] = url
@@ -44,9 +44,11 @@ app.post('/api/shorturl', function (req, res) {
 })
 
 app.get('/api/shorturl/:shorturl', function (req, res) {
-  const url = req.params.short_url
-  if (url) {
-    res.redirect(url);
+  const shorturl = req.params.shorturl;
+  const original_url = urlDatabase[shorturl];
+  
+  if (original_url) {
+    res.redirect(original_url);
   } else {
     res.json({ error: 'No short URL found for given input' });
   }
