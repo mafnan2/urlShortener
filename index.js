@@ -46,19 +46,21 @@ function isValidURL(url, callback) {
 app.post('/api/shorturl', function (req, res) {
   const url = req.body.url
 
-  if (!isValidURL(url)) {
-    return res.json({ error: 'invalid url' });
-  }
-  let shorturl = idCounter++
-  urlDatabase[shorturl] = url
+  isValidURL(url, (valid) => {
+    if (!valid) {
+      return res.json({ error: 'invalid url' }); // invalid URL handling
+    }
+    let shorturl = idCounter++
+    urlDatabase[shorturl] = url
 
-  res.status(200).json({ original_url: url, short_url: shorturl })
+    res.status(200).json({ original_url: url, short_url: shorturl })
+  })
 })
 
 app.get('/api/shorturl/:shorturl', function (req, res) {
   const shorturl = req.params.shorturl;
   const original_url = urlDatabase[shorturl];
-  
+
   if (original_url) {
     res.redirect(original_url);
   } else {
