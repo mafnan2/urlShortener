@@ -44,8 +44,9 @@ app.post('/api/shorturl', function (req, res) {
 })
 
 app.get('/api/shorturl/:shorturl', function (req, res) {
-  if (original_url) {
-    res.redirect(original_url);
+  const url = req.params.short_url
+  if (url) {
+    res.redirect(url);
   } else {
     res.json({ error: 'No short URL found for given input' });
   }
