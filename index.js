@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const dns = require('dns');
+const { URL } = require('url');
 const app = express();
 
 // Basic Configuration
@@ -22,14 +24,24 @@ app.get('/api/hello', function (req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-function isValidURL(url) {
+
+
+function isValidURL(url, callback) {
+  let hostname;
   try {
-    new URL(url)
-    return true
+    hostname = new URL(url).hostname;
   } catch (_) {
-    return false
+    return callback(false);
   }
+
+  dns.lookup(hostname, (err) => {
+    if (err) {
+      return callback(false);
+    }
+    return callback(true);
+  });
 }
+
 
 app.post('/api/shorturl', function (req, res) {
   const url = req.body.url
