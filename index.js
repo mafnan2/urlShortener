@@ -31,22 +31,22 @@ function isValidURL(url) {
 }
 
 app.post('/api/shorturl', function (req, res) {
-  const url = req.body
+  const url = req.body.url
 
   if (!isValidURL(url)) {
     return res.status(400).json({ error: 'invalid url' })
   }
   let shorturl = idCounter++
-  let mainURL = url
+  urlDatabase[shorturl] = url
 
-  res.status(200).json({ original_url: mainURL, short_url: shorturl })
+  res.status(200).json({ original_url: url, short_url: shorturl })
 })
 
 app.get('/api/shorturl/:shorturl', function (req, res) {
-  if (isValidURL(req.params.shorturl)) {
-    res.redirect(req.params.shorturl)
+  if (original_url) {
+    res.redirect(original_url);
   } else {
-    res.status(404).json({ error: 'No short URL found for given input' })
+    res.json({ error: 'No short URL found for given input' });
   }
 })
 
